@@ -3,6 +3,7 @@
 var gameStart = {},
   gameSpeed = {},
   gameArea = {},
+scoreDisplay = {},
   //manualStep = {},
   directionButtons = [],
   gameAreaContext = {},
@@ -20,6 +21,7 @@ function initElement() {
   gameStart = document.querySelector('#gameStart');
   gameSpeed = document.querySelector('#gameSpeed');
   gameArea = document.querySelector('#gameArea');
+  scoreDisplay = document.querySelector('#score');
   //manualStep = document.querySelector('#manualStep');
   directionButtons = document.querySelectorAll('.direction-button');
 
@@ -56,14 +58,109 @@ function snakeOnItself(x, y, array) {
 }
 
 function writeScore() {
-  gameAreaContext.font = '50px sans-serif';
-  gameAreaContext.fillStyle = '#FF0000';
-  gameAreaContext.fillText('Score: ' + playerScore, (gameAreaWidth / 2) - 100, gameAreaHeight / 2);
+  scoreDisplay.textContent = 'Score: ' + playerScore;
 }
 
-function createSquare(x, y) {
-  gameAreaContext.fillStyle = '#000000';
-  gameAreaContext.fillRect(x * cellWidth, y * cellWidth, cellWidth, cellWidth);
+function drawSnakeSegment(x, y, isHead, index) {
+  var pixelX = x * cellWidth;
+  var pixelY = y * cellWidth;
+  var gradient = gameAreaContext.createLinearGradient(
+    pixelX,
+    pixelY,
+    pixelX + cellWidth,
+    pixelY + cellWidth
+  );
+
+  if (isHead) {
+    gradient.addColorStop(0, '#a8ee79');
+    gradient.addColorStop(0.5, '#4caf50');
+    gradient.addColorStop(1, '#145c2a');
+  } else if (index % 2 === 0) {
+    gradient.addColorStop(0, '#8bd553');
+    gradient.addColorStop(0.5, '#3d8f35');
+    gradient.addColorStop(1, '#164c27');
+  } else {
+    gradient.addColorStop(0, '#6fbf42');
+    gradient.addColorStop(0.5, '#2f7b31');
+    gradient.addColorStop(1, '#103f22');
+  }
+
+  gameAreaContext.fillStyle = gradient;
+  gameAreaContext.fillRect(pixelX, pixelY, cellWidth, cellWidth);
+  gameAreaContext.strokeStyle = '#174d23';
+  gameAreaContext.lineWidth = 1;
+  gameAreaContext.strokeRect(pixelX + 0.5, pixelY + 0.5, cellWidth - 1, cellWidth - 1);
+
+  if (isHead) {
+    var eyePositions;
+    if (snakeDirection === 'left') {
+      eyePositions = [[pixelX + 6, pixelY + 5, -1, 0], [pixelX + 6, pixelY + 15, -1, 0]];
+    } else if (snakeDirection === 'up') {
+      eyePositions = [[pixelX + 5, pixelY + 6, 0, -1], [pixelX + 15, pixelY + 6, 0, -1]];
+    } else if (snakeDirection === 'down') {
+      eyePositions = [[pixelX + 5, pixelY + 14, 0, 1], [pixelX + 15, pixelY + 14, 0, 1]];
+    } else {
+      eyePositions = [[pixelX + 14, pixelY + 5, 1, 0], [pixelX + 14, pixelY + 15, 1, 0]];
+    }
+
+    eyePositions.forEach(function (eye) {
+      gameAreaContext.beginPath();
+      gameAreaContext.fillStyle = '#f5ffe9';
+      gameAreaContext.arc(eye[0], eye[1], 2.5, 0, Math.PI * 2);
+      gameAreaContext.fill();
+      gameAreaContext.beginPath();
+      gameAreaContext.fillStyle = '#102b16';
+      gameAreaContext.arc(eye[0] + eye[2], eye[1] + eye[3], 1.2, 0, Math.PI * 2);
+      gameAreaContext.fill();
+    });
+  } else {
+    gameAreaContext.beginPath();
+    gameAreaContext.fillStyle = 'rgba(205, 255, 170, 0.42)';
+    gameAreaContext.arc(pixelX + 6, pixelY + 6, 2, 0, Math.PI * 2);
+    gameAreaContext.fill();
+    gameAreaContext.beginPath();
+    gameAreaContext.fillStyle = 'rgba(10, 55, 22, 0.38)';
+    gameAreaContext.arc(pixelX + 14, pixelY + 14, 2, 0, Math.PI * 2);
+    gameAreaContext.fill();
+  }
+}
+
+function drawFood(x, y) {
+  var centerX = x * cellWidth + cellWidth / 2;
+  var centerY = y * cellWidth + cellWidth / 2;
+  var gradient = gameAreaContext.createRadialGradient(
+    centerX - 3,
+    centerY - 4,
+    1,
+    centerX,
+    centerY,
+    cellWidth / 2
+  );
+  gradient.addColorStop(0, '#ffb3a7');
+  gradient.addColorStop(0.45, '#e53935');
+  gradient.addColorStop(1, '#8e111b');
+
+  gameAreaContext.beginPath();
+  gameAreaContext.moveTo(centerX, centerY - 5);
+  gameAreaContext.bezierCurveTo(centerX - 8, centerY - 12, centerX - 12, centerY - 2, centerX - 8, centerY + 4);
+  gameAreaContext.bezierCurveTo(centerX - 7, centerY + 10, centerX - 2, centerY + 10, centerX, centerY + 7);
+  gameAreaContext.bezierCurveTo(centerX + 4, centerY + 11, centerX + 9, centerY + 7, centerX + 9, centerY + 1);
+  gameAreaContext.bezierCurveTo(centerX + 12, centerY - 5, centerX + 6, centerY - 9, centerX, centerY - 5);
+  gameAreaContext.closePath();
+  gameAreaContext.fillStyle = gradient;
+  gameAreaContext.fill();
+
+  gameAreaContext.beginPath();
+  gameAreaContext.strokeStyle = '#59351c';
+  gameAreaContext.lineWidth = 2;
+  gameAreaContext.moveTo(centerX, centerY - 5);
+  gameAreaContext.lineTo(centerX + 2, centerY - 10);
+  gameAreaContext.stroke();
+
+  gameAreaContext.beginPath();
+  gameAreaContext.fillStyle = '#3e8b3e';
+  gameAreaContext.ellipse(centerX + 4, centerY - 8, 4, 2, -0.5, 0, Math.PI * 2);
+  gameAreaContext.fill();
 }
 
 function checkDirectionUpdatePosition() {
@@ -127,6 +224,7 @@ function updateGameArea() {
   if (snakeAteFootVar) {
     var newHead = { x: snakeX, y: snakeY };
     playerScore += speedSize;
+    writeScore();
     createFood();
   } 
   
@@ -144,13 +242,13 @@ function updateGameArea() {
   
   // create the snake
   for (var index = 0, length = snake.length; index < length; index++) {
-    createSquare(snake[index].x, snake[index].y);
+    drawSnakeSegment(snake[index].x, snake[index].y, index === 0, index);
   } 
     
     
   
   // create the food
-  createSquare(snakeFood.x, snakeFood.y);
+  drawFood(snakeFood.x, snakeFood.y);
   
 }
 
@@ -187,6 +285,7 @@ function onStartGame() {
 
   // reset score
   playerScore = 0;
+  writeScore();
 
   // reset direction to right
   snakeDirection = 'right';
@@ -240,6 +339,7 @@ function initEvent() {
 
 function init() {
   initElement();
+  writeScore();
   createGameArea()
   initEvent();
 }
