@@ -10,3 +10,63 @@ input {
   text-align: center;
   padding: 5px 7px;
 }
+
+#gameArea {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+.direction-pad {
+  display: grid;
+  grid-template-areas:
+    ". up ."
+    "left . right"
+    ". down .";
+  grid-template-columns: repeat(3, 72px);
+  gap: 8px;
+  justify-content: center;
+  margin: 16px auto;
+  touch-action: none;
+  user-select: none;
+}
+
+.direction-button {
+  width: 72px;
+  height: 72px;
+  padding: 0;
+  border: 2px solid #222;
+  border-radius: 12px;
+  background: #f2f2f2;
+  color: #111;
+  font-size: 2rem;
+  font-weight: bold;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.direction-button:active {
+  background: #d6d6d6;
+}
+
+.direction-button:focus-visible {
+  outline: 3px solid #1769aa;
+  outline-offset: 2px;
+}
+
+.direction-up {
+  grid-area: up;
+}
+
+.direction-left {
+  grid-area: left;
+}
+
+.direction-right {
+  grid-area: right;
+}
+
+.direction-down {
+  grid-area: down;
+}

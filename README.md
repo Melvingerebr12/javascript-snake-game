@@ -69,7 +69,6 @@
 
 * make the food green
 * make the snake bigger
-* add buttons at the bottom to change the direction
 * what does `gameStart.disabled`
 * draw the squares on the board
 * increase the speed after eating

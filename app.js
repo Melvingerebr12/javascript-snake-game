@@ -4,6 +4,7 @@ var gameStart = {},
   gameSpeed = {},
   gameArea = {},
   manualStep = {},
+  directionButtons = [],
   gameAreaContext = {},
   snake = [],
   gameAreaWidth = 0,
@@ -20,6 +21,7 @@ function initElement() {
   gameSpeed = document.querySelector('#gameSpeed');
   gameArea = document.querySelector('#gameArea');
   manualStep = document.querySelector('#manualStep');
+  directionButtons = document.querySelectorAll('.direction-button');
 
   gameAreaContext = gameArea.getContext('2d');
   gameAreaWidth = 400;
@@ -200,12 +202,27 @@ function onStartGame() {
   startGame();
 }
 
+function setDirection(direction) {
+  var oppositeDirections = {
+    up: 'down',
+    down: 'up',
+    left: 'right',
+    right: 'left',
+  };
+  if (direction !== oppositeDirections[snakeDirection]) {
+    snakeDirection = direction;
+  }
+}
+
 function changeDirection(e) {
-  var keys = e.which;
-  if (keys == '40' && snakeDirection != 'up') snakeDirection = 'down';
-  else if (keys == '39' && snakeDirection != 'left') snakeDirection = 'right';
-  else if (keys == '38' && snakeDirection != 'down') snakeDirection = 'up';
-  else if (keys == '37' && snakeDirection != 'right') snakeDirection = 'left';
+  var keyDirections = {
+    ArrowDown: 'down',
+    ArrowRight: 'right',
+    ArrowUp: 'up',
+    ArrowLeft: 'left',
+  };
+  var direction = keyDirections[e.key];
+  if (direction) setDirection(direction);
 }
 
 
@@ -214,6 +231,11 @@ function initEvent() {
   gameStart.addEventListener('click', onStartGame);
   manualStep.addEventListener('click', stepOnClick)
   window.addEventListener('keydown', changeDirection);
+  directionButtons.forEach(function (button) {
+    button.addEventListener('click', function () {
+      setDirection(button.dataset.direction);
+    });
+  });
 }
 
 function init() {

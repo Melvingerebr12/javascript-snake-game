@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>JavaScript Snake Game</title>
   <link rel="stylesheet" href="app.css" />
 </head>
@@ -13,6 +14,12 @@
   <input type="button" value="Manual Step" id="manualStep" />
   <br /> <br />
   <canvas id="gameArea"></canvas>
+  <div class="direction-pad" role="group" aria-label="Snake direction controls">
+    <button type="button" class="direction-button direction-up" data-direction="up" aria-label="Move up">&#8593;</button>
+    <button type="button" class="direction-button direction-left" data-direction="left" aria-label="Move left">&#8592;</button>
+    <button type="button" class="direction-button direction-right" data-direction="right" aria-label="Move right">&#8594;</button>
+    <button type="button" class="direction-button direction-down" data-direction="down" aria-label="Move down">&#8595;</button>
+  </div>
   <script src="app.js"></script>
 </body>
 
