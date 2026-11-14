@@ -3,7 +3,7 @@
 var gameStart = {},
   gameSpeed = {},
   gameArea = {},
-  manualStep = {},
+  //manualStep = {},
   directionButtons = [],
   gameAreaContext = {},
   snake = [],
@@ -20,7 +20,7 @@ function initElement() {
   gameStart = document.querySelector('#gameStart');
   gameSpeed = document.querySelector('#gameSpeed');
   gameArea = document.querySelector('#gameArea');
-  manualStep = document.querySelector('#manualStep');
+  //manualStep = document.querySelector('#manualStep');
   directionButtons = document.querySelectorAll('.direction-button');
 
   gameAreaContext = gameArea.getContext('2d');
@@ -229,7 +229,7 @@ function changeDirection(e) {
 
 function initEvent() {
   gameStart.addEventListener('click', onStartGame);
-  manualStep.addEventListener('click', stepOnClick)
+ // manualStep.addEventListener('click', stepOnClick)
   window.addEventListener('keydown', changeDirection);
   directionButtons.forEach(function (button) {
     button.addEventListener('click', function () {
