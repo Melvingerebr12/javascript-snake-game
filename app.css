@@ -25,21 +25,20 @@ input {
 
 .direction-pad {
   display: grid;
-  grid-template-areas:
-    ". up ."
-    "left . right"
-    ". down .";
-  grid-template-columns: repeat(3, 72px);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
   justify-content: center;
+  width: 100%;
+  max-width: 312px;
   margin: 16px auto;
   touch-action: none;
   user-select: none;
 }
 
 .direction-button {
-  width: 72px;
-  height: 72px;
+  width: 100%;
+  aspect-ratio: 1;
+  box-sizing: border-box;
   padding: 0;
   border: 2px solid #222;
   border-radius: 12px;
@@ -58,20 +57,4 @@ input {
 .direction-button:focus-visible {
   outline: 3px solid #1769aa;
   outline-offset: 2px;
-}
-
-.direction-up {
-  grid-area: up;
-}
-
-.direction-left {
-  grid-area: left;
-}
-
-.direction-right {
-  grid-area: right;
-}
-
-.direction-down {
-  grid-area: down;
 }
